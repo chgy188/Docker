@@ -1,0 +1,27 @@
+
+$ docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /root/data:/var/lib/mysql -p 3306:3306 daocloud.io/mysql:5.5 
+$ docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /data/mysql/my.cnf:/etc/mysql/my.cnf -v /data/mysql/data:/var/lib/mysql -p 3306:3306 daocloud.io/mysql:5.5 
+
+client
+docker run --name=mysql_client --link=mysql:db -t -i  --rm daocloud.io/mysql:5.5 sh -c 'exec mysql -h db -uroot -padmin
+
+phpmyadmin
+docker run --name phpmyadmin -d -p 8080:80 --link mysql:db phpmyadmin/phpmyadmin:4.6.3-1 
+
+docker run --name php --rm -p 8080:80 -v /root/www/:/var/www/html/  --link mysql php:5.6
+
+docker run --name php --rm -p 8080:80 -v "$PWD":/var/www/html/ --link mysql php:5.6
+
+lamp
+docker run --name lamp -d -p 80:80 -p 3306:3306 -v /root/data/:/var/lib/mysql/ -v /root/www/:/var/www/html/ tutum/lamp
+
+创建一个普通的容器
+docker run -v /home/dock/Downloads:/usr/Downloads  --name dataVol ubuntu64 /bin/bash
+创建一个新的容器，来使用这个数据卷。
+docker run -it --volumes-from dataVol ubuntu64 /bin/bash
+
+image重明名
+docker tag
+
+删除<none>
+docker images --no-trunc| grep none | awk '{print $3}' | xargs -r docker rmi  
